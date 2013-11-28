@@ -72,7 +72,7 @@
 (box-error
  (factorial 30)
 )
-;; => [:ERROR #<java.lang.ArithmeticException: integer overflow>]
+;; => {:ERROR #<java.lang.ArithmeticException: integer overflow>}
 
 (defn factorial-2 [n]
   (if (= n 0)
@@ -181,7 +181,7 @@
 (box-error
  (1 2 3)
 )
-;; => [:ERROR ClassCastException java.lang.Long cannot be cast to clojure.lang.IFn]
+;; => {:ERROR ClassCastException java.lang.Long cannot be cast to clojure.lang.IFn}
 
 ;; That's because the 1 is in function (first) position. The evaluator tries to
 ;; find an appropriate function, as it would for a symbol, but there is none. So
