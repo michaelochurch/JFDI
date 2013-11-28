@@ -72,7 +72,7 @@
 (box-error
  (factorial 30)
 )
-;; =!! java.lang.ArithmeticException: integer overflow
+;; => [:ERROR #<java.lang.ArithmeticException: integer overflow>]
 
 (defn factorial-2 [n]
   (if (= n 0)
@@ -119,9 +119,9 @@
 ;;  java.lang.Long java.lang.Float java.lang.Double java.lang.Character)
 
 ;; Note that Clojure's natural tendency is to convert integers => Long
-;; and decimals => Double.
+;; and decimal literals => Double.
 
-;; Clojure also has rational numbersP:
+;; Clojure also has rational numbers:
 
 (/ 5 7)
 ;; => 5/7
@@ -181,7 +181,7 @@
 (box-error
  (1 2 3)
 )
-;; =!! ClassCastException java.lang.Long cannot be cast to clojure.lang.IFn
+;; => [:ERROR ClassCastException java.lang.Long cannot be cast to clojure.lang.IFn]
 
 ;; That's because the 1 is in function (first) position. The evaluator tries to
 ;; find an appropriate function, as it would for a symbol, but there is none. So
@@ -206,7 +206,8 @@
 ;; => (2 3 4)
 
 ;; The returns from rest look like lists, but they're actually something
-;; different: seqs. 
+;; different: seqs. Or, I should say: lists are a subcategory of seqs. 
+;; Lists are linked-list seqs that live in memory; but seqs can be lazy and infinite.
 
 (class (rest [1 2 3 4]))
 ;; => clojure.lang.PersistentVector$ChunkedSeq
@@ -340,7 +341,7 @@ my-sorted-map
 ;; 4. Atoms-- Clojure's simplest mutable type.
 
 ;; This demo won't get into all of the options Clojure has for mutability, but
-;; Atoms are one of the simplest. They're called atomic because they allow the
+;; atoms are one of the simplest. They're called atoms because they allow the
 ;; fundamental prerequisite for proper concurrency: atomic operations-- that is,
 ;; operations that can't be interfered with in-progress (producing inconsistent
 ;; states).
@@ -543,7 +544,13 @@ my-sorted-map
 (defmacro silly [& stuff] (reverse stuff))
 
 (silly 8 9 +)
-;; 17
+;; => 17
+
+;; To see audit generated code, you'll often use macro expansion functions like
+;; macroexpand on the code-- as a list. 
+
+(macroexpand '(silly 8 9 +))
+;; => (+ 9 8)
 
 (silly :a :b list)
 ;; => (:b :a)
@@ -558,9 +565,6 @@ my-sorted-map
 (add-mul 1 2 3)
 ;; => 7
 
-;; To see audit generated code, you'll often use macro expansion functions like
-;; macroexpand on the code-- as a list. 
-
 (macroexpand '(add-mul 1 2 3))
 ;; => (+ 1 (* 2 3))
 
@@ -569,8 +573,8 @@ my-sorted-map
 ;; lists) becomes unreadable. In practice, macro writers make heavy use of
 ;; syntax quoting.
 
-;; When you quote a list, the quote is recursively applied to all symbols in the
-;; list.
+;; Let's get into quoting, and what really happens, then. When you quote a list, 
+;; the quote is recursively applied to all symbols in it.
 
 (= (list '+ 5 6) '(+ 5 6))
 ;; => true
@@ -650,7 +654,7 @@ z
 ;; => nil
 
 ;; ... but is really hard to read, much less maintain. Syntax quoting makes this
-;; a lot better.
+;; a lot better. Here's an identical macro. 
 
 (defmacro ignore-errors-2 [& code]
   `(try
@@ -731,7 +735,7 @@ z
 ;; <stdout> The form was:  (jfdi/buggy-mult-root 10 4)
 ;; <stdout> Returning...  41
 
-;; We confirm our suspicion: the bug is in buggy-mult-root!
+;; We confirm our suspicion: the bug is in buggy-mult!
 
 ;; In practice, this is NOT the best way to trace a function. Throwing eval at
 ;; production systems is frowned upon, and for very good reasons. However, it
