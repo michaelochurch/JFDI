@@ -187,7 +187,7 @@
 ;; find an appropriate function, as it would for a symbol, but there is none. So
 ;; it's an error.
 
-;; Because they are evaluated when read, and also because they're linked lists
+;; Because lists are evaluated when read, and also because they're linked lists
 ;; (lacking random access) a more common data structure is the Vector.
 
 [1 2 3]
@@ -195,7 +195,8 @@
 (vec (list 4 5 6))
 ;; => [4 5 6]
 
-;; To pull apart lists and vectors, you have a variety of functions to do that.
+;; To pull apart lists and vectors, you have a variety of functions to do that. They 
+;; work against the sequence (seq) abstraction so the same functions work for both. 
 (first [1 2 3 4])
 ;; => 1
 (first '(1 2 3 4))
@@ -253,6 +254,7 @@
 
 v
 ;; => [4 8 16 32 64]
+;; (no change)
 
 (assoc v 3 :orange)
 ;; => [4 8 16 :orange 64]
